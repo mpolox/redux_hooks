@@ -42,6 +42,8 @@ const StudentContextProvider = (props) => {
     axios.get("https://localhost:44397/user/All")
     .then(res => {
       console.log("-------->", res.data);
+    }).catch(err => {
+      console.log("Error on axios request", err);
     });
     return initialStudents;
   }
