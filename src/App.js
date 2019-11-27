@@ -9,6 +9,7 @@ import ToggleButton from "./components/ToggleButton";
 import StudentContextProvider from "./contexts/StudentsContext";
 import ThemeContextProvider from "./contexts/ThemeContext";
 import AuthContextProvider from "./contexts/Authcontext";
+import StudentForm from "./components/StudentsForm";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <NavBar/>
           <StudentContextProvider>
             <StudentList/>
+            <StudentForm/>
           </StudentContextProvider>
           <ToggleButton/>
         </AuthContextProvider>

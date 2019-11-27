@@ -1,63 +1,50 @@
 import React, {createContext, useState} from 'react';
 import axios from "axios";
+const PATH = "https://localhost:44397/";
 
 export const StudentContext = createContext();
 
 const StudentContextProvider = (props) => {
 
-  const initialStudents = 
-  [
-    {
-      name: "Marcopolo",
-      lastName: "Ramos",
-      lastNameMother: "Peña",
-      number: "987654321",
-      email: "mpolox@gmail.com"
-    },
-    {
-      name: "Emilia",
-      lastName: "Ramos",
-      lastNameMother: "Galvan",
-      number: "321321321",
-      email: "emy@gmail.com"
-    },
-    {
-      name: "Alexandra",
-      lastName: "Galván",
-      lastNameMother: "Esparza",
-      number: "654321654",
-      email: "alex@gmail.com"
-    },
-    {
-      name: "Polin",
-      lastName: "Ramos",
-      lastNameMother: "Galván",
-      number: "111222333",
-      email: "polin@gmail.com"
-    }
-  ]
+  let initialStudents = null;
 
   const getInitialStudents = () => {
-    console.log("Execute axios");
-    axios.get("https://localhost:44397/user/All")
+    axios.get(PATH +"user/All")
     .then(res => {
-      console.log("-------->", res.data);
+      setStudents(res.data);
     }).catch(err => {
       console.log("Error on axios request", err);
     });
     return initialStudents;
   }
 
-  const [students, setStudents] = useState(getInitialStudents);
-
-  const addStudent = (name, lastName, lastNameMother, number, email) => {
-    setStudents(...students, 
-      {name, lastName, lastNameMother, number, email}
-    );
+  const addStudent = (name, lastName, lastNameMother, email) => {
+    axios.post(PATH + "user", {name,lastName, lastNameMother, email})
+    .then(res => {
+      console.log("RES.DATA", res.data);
+      const id = res.data.id;
+      setStudents([...students, {id, name,lastName, lastNameMother, email}]);
+    })
+    .catch(err => {
+      console.log("ERR", err)
+    })
   }
 
+  const deleteStudent = (id) => {
+    console.log("DELTE:", {id});
+    axios.delete(PATH + "user?id="+ id)
+    .then(res => {
+      console.log("DELETED");
+    })
+    .catch(err => {
+      console.log("ERR", err)
+    })  }
+
+  const [students, setStudents] = useState(getInitialStudents);
+
+
   return (
-    <StudentContext.Provider value={{students, addStudent}}>
+    <StudentContext.Provider value={{students, addStudent, deleteStudent}}>
     {props.children}
     </StudentContext.Provider>
   );
